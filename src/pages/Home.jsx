@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import FeaturedCarousel from '../components/FeaturedCarousel';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getMovies } from '../api/tmdb';
 // TODO ขั้นที่ 5: import { useEffect } from 'react' และ import { getMovies } from '../api/tmdb'
 
@@ -34,7 +35,6 @@ function Home() {
       .catch(() => { if (!ignore) setPicks([]); });   // พลาดก็แค่ไม่มีหนังแนะนำ หน้าแรกไม่ควรพัง
     return () => { ignore = true; };
   }, []);
-
   return (
     <div className="mx-auto max-w-5xl px-4 md:px-6">
       {/* Hero */}
