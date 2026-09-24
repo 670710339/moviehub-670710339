@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import { getMovies, CACHE_KEY } from '../api/tmdb';
-import { forget } from '../api/cache';
 import MovieGrid from '../components/MovieGrid';
-import { movies as localMovies } from '../data/data';
+import { forget } from '../api/cache';
+//import { movies as localMovies } from '../data/data';
 // TODO ขั้นที่ 3: import { useEffect } from 'react' และ import { getMovies, CACHE_KEY } from '../api/tmdb' กับ { forget } from '../api/cache'
 
 function Movies() {
@@ -13,15 +14,6 @@ function Movies() {
   //   movies   เริ่มจาก []  (รายการที่ได้จาก getMovies() ซึ่งโหลดจริงวันละครั้ง)
   //   status   'loading' | 'success' | 'error'
   //   error    Error หรือ null
-  //   และ reloadKey (ตัวนับ) สำหรับปุ่ม "ลองใหม่" ที่ต้อง forget(CACHE_KEY) ก่อนโหลดซ้ำ
-  //const movies = localMovies;
-  //const status = 'success';
-  //const error = null;
-  const [movies, setMovies] = useState([]);        // รายการจาก getMovies() (โหลดจริงวันละครั้ง)
-  const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
-  const [error, setError] = useState(null);
-  const [reloadKey, setReloadKey] = useState(0);
-
   useEffect(() => {
     let ignore = false;                            // ธงกันคำตอบเก่ามาทับคำตอบใหม่
 
@@ -44,6 +36,13 @@ function Movies() {
 
     return () => { ignore = true; };               // cleanup: effect รอบเก่าถูกยกเลิก
   }, [reloadKey]);
+  //   และ reloadKey (ตัวนับ) สำหรับปุ่ม "ลองใหม่" ที่ต้อง forget(CACHE_KEY) ก่อนโหลดซ้ำ
+  const [movies, setMovies] = useState([]);        // รายการจาก getMovies() (โหลดจริงวันละครั้ง)
+  const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
+  const [error, setError] = useState(null);
+  const [reloadKey, setReloadKey] = useState(0);   // ตัวนับสำหรับปุ่ม "ลองใหม่"
+
+
 
   // ค่าที่คำนวณจาก state ไม่ต้องเป็น state เอง: รายชื่อแนวที่มีจริง และรายการหลังกรอง
   const genres = [...new Set(movies.map(m => m.genre).filter(Boolean))];
