@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import FeaturedCarousel from '../components/FeaturedCarousel';
 import { useEffect } from 'react';
-import { getMovies } from '../api/tmdb';
+import { getMovies } from '../api/backend';
 // TODO ขั้นที่ 5: import { useEffect } from 'react' และ import { getMovies } from '../api/tmdb'
 
 const STEPS = [

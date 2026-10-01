@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { getMovies, CACHE_KEY } from '../api/tmdb';
+import { getMovies } from '../api/backend';
 import MovieGrid from '../components/MovieGrid';
-import { forget } from '../api/cache';
+
 //import { movies as localMovies } from '../data/data';
 // TODO ขั้นที่ 3: import { useEffect } from 'react' และ import { getMovies, CACHE_KEY } from '../api/tmdb' กับ { forget } from '../api/cache'
 
@@ -14,7 +14,12 @@ function Movies() {
   //   movies   เริ่มจาก []  (รายการที่ได้จาก getMovies() ซึ่งโหลดจริงวันละครั้ง)
   //   status   'loading' | 'success' | 'error'
   //   error    Error หรือ null
-  useEffect(() => {
+  //   และ reloadKey (ตัวนับ) สำหรับปุ่ม "ลองใหม่" ที่ต้อง forget(CACHE_KEY) ก่อนโหลดซ้ำ
+  const [movies, setMovies] = useState([]);        // รายการจาก getMovies() (โหลดจริงวันละครั้ง)
+  const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
+  const [error, setError] = useState(null);
+  const [reloadKey, setReloadKey] = useState(0);
+ useEffect(() => {
     let ignore = false;                            // ธงกันคำตอบเก่ามาทับคำตอบใหม่
 
     async function load() {
@@ -36,13 +41,6 @@ function Movies() {
 
     return () => { ignore = true; };               // cleanup: effect รอบเก่าถูกยกเลิก
   }, [reloadKey]);
-  //   และ reloadKey (ตัวนับ) สำหรับปุ่ม "ลองใหม่" ที่ต้อง forget(CACHE_KEY) ก่อนโหลดซ้ำ
-  const [movies, setMovies] = useState([]);        // รายการจาก getMovies() (โหลดจริงวันละครั้ง)
-  const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
-  const [error, setError] = useState(null);
-  const [reloadKey, setReloadKey] = useState(0);   // ตัวนับสำหรับปุ่ม "ลองใหม่"
-
-
 
   // ค่าที่คำนวณจาก state ไม่ต้องเป็น state เอง: รายชื่อแนวที่มีจริง และรายการหลังกรอง
   const genres = [...new Set(movies.map(m => m.genre).filter(Boolean))];
@@ -66,8 +64,8 @@ function Movies() {
           </p>
         </div>
         <input value={query} onChange={(e) => setQuery(e.target.value)}
-          placeholder="พิมพ์ชื่อหนังเพื่อกรอง..."
-          className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 md:w-72" />
+               placeholder="พิมพ์ชื่อหนังเพื่อกรอง..."
+               className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 md:w-72" />
       </div>
 
       {/* เมนูเลือกแนวหนัง สร้างจากข้อมูลที่มีจริง ไม่ต้องพิมพ์รายชื่อเอง */}
@@ -79,7 +77,7 @@ function Movies() {
       </div>
 
       <MovieGrid movies={shown} status={status} error={error}
-                 onRetry={() => { forget(CACHE_KEY); setReloadKey(k => k + 1); }} />
+                 onRetry={() => setReloadKey(k => k + 1)} />
     </div>
   );
 }
