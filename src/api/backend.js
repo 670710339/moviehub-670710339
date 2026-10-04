@@ -21,7 +21,7 @@ export async function apiFetch(path, { method = 'GET', body, token } = {}) {
   const data = await res.json()                              //    อ่านคำตอบเป็น JSON
     .catch(() => ({ error: 'server ไม่ได้ตอบเป็น JSON' }));
   if (!res.ok) {                                             // 4) 400 / 401 / 404 / 409 มาลงตรงนี้
-    const err = new Error(`data.error || server ตอบกลับ ${res.status}`);
+    const err = new Error(data.error || `server ตอบกลับ ${res.status}`);
     err.status = res.status;                                 //    แนบเลขไว้ให้หน้าเว็บใช้ต่อ
     throw err;
   }
@@ -44,12 +44,12 @@ export function getReviews(movieId) {
   return apiFetch(`/api/movies/${movieId}/reviews`);                                   // ได้ { items }
 }
 export function postReview(movieId, text, token) {
-  return apiFetch(`/api/movies/${movieId}/reviews, { method: 'POST', body: { text }, token }`);
+  return apiFetch(`/api/movies/${movieId}/reviews`, { method: 'POST', body: { text }, token });
 }
 
 // ---------- คะแนน ----------
 export function putVote(movieId, score, token) {
-  return apiFetch(`/api/movies/${movieId}/vote, { method: 'PUT', body: { score }, token }`);
+  return apiFetch(`/api/movies/${movieId}/vote`, { method: 'PUT', body: { score }, token });
 }
 
 // ---------- Wishlist ----------
@@ -57,10 +57,10 @@ export function getWishlist(token) {
   return apiFetch('/api/me/wishlist', { token });                                       // ได้ { items }
 }
 export function addToWishlist(movieId, token) {
-  return apiFetch(`/api/me/wishlist/${movieId}, { method: 'PUT', token }`);
+  return apiFetch(`/api/me/wishlist/${movieId}`, { method: 'PUT', token });
 }
 export function removeFromWishlist(movieId, token) {
-  return apiFetch(`/api/me/wishlist/${movieId}, { method: 'DELETE', token }`);
+  return apiFetch(`/api/me/wishlist/${movieId}`, { method: 'DELETE', token });
 }
 
 // ---------- หนัง (สัปดาห์หน้า: เปลี่ยนหน้า Movies จาก tmdb.js มาใช้ตัวนี้) ----------
@@ -68,6 +68,7 @@ export async function getMovies() {
   const data = await apiFetch('/api/movies');
   return data.items;
 }
+
 export async function getMovie(movieId) {
   return apiFetch(`/api/movies/${movieId}`);
 }
