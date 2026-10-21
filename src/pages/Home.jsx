@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import FeaturedCarousel from '../components/FeaturedCarousel';
-import { useEffect } from 'react';
+//import { getMovies } from '../api/tmdb';
 import { getMovies } from '../api/backend';
 // TODO ขั้นที่ 5: import { useEffect } from 'react' และ import { getMovies } from '../api/tmdb'
 
@@ -25,9 +25,9 @@ function shuffle(list) {
 }
 
 function Home() {
-  const [picks, setPicks] = useState([]);   // เริ่มว่าง รอข้อมูลจาก API แล้วค่อยสุ่ม
-
-  // ใช้ getMovies() ตัวเดียวกับหน้า Movies ถ้าวันนี้เคยโหลดแล้วจะได้จาก localStorage ทันที
+  // สุ่มครั้งเดียวตอน component เกิด แล้วจำไว้ใน state (กดเลื่อนแล้วลำดับไม่เปลี่ยน)
+  // TODO ขั้นที่ 5: เปลี่ยนเป็น useState([]) แล้วใช้ useEffect เรียก getMovies() แล้ว setPicks(shuffle(list))
+  const [picks, setPicks] = useState([]); 
   useEffect(() => {
     let ignore = false;
     getMovies()
@@ -35,6 +35,7 @@ function Home() {
       .catch(() => { if (!ignore) setPicks([]); });   // พลาดก็แค่ไม่มีหนังแนะนำ หน้าแรกไม่ควรพัง
     return () => { ignore = true; };
   }, []);
+
   return (
     <div className="mx-auto max-w-5xl px-4 md:px-6">
       {/* Hero */}

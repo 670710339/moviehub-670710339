@@ -6,7 +6,6 @@ import MovieActions from '../components/MovieActions';
 import { getMovie } from '../api/backend';
 import { useAuth } from '../auth/AuthContext';
 import { getReviews, postReview } from '../api/backend';
-// TODO ขั้นที่ 3: import { getReviews, postReview } from '../api/backend';
 
 function MovieDetail() {
   const { id } = useParams();                       // ได้เป็น string เสมอ (ตอนนี้คือรหัสของ TMDB)
@@ -14,8 +13,8 @@ function MovieDetail() {
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState(null);
   const [reviews, setReviews] = useState([]);       // รีวิวจาก backend ของเรา (ไม่ใช่ TMDB)
-  const { isLoggedIn } = useAuth();                 // TODO ขั้นที่ 3: ดึง token และ member มาด้วย
-  const { token, member } = useAuth(); 
+  const { isLoggedIn, token, member } = useAuth();      
+  // TODO ขั้นที่ 3: ดึง token และ member มาด้วย
 
   useEffect(() => {
     let ignore = false;
